@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>翻页时钟</title>
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <!-- vConsole调试工具 -->
+    <!-- <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+    <script>
+        // 初始化vConsole
+        var vConsole = new window.VConsole();
+        console.log('vConsole已启用');
+    </script> -->
+</head>
+<body>
+    <div class="clock-container">
+        <button id="fullscreenBtn" class="fullscreen-btn">⛶</button>
+        <button id="themeToggleBtn" class="theme-toggle-btn">🌓</button>
+        <div class="clock" id="clock">
+            <div class="drag-handle" title="上下拖动调整位置"></div>
+            <div class="time-section" id="timeSection">
+                <div class="number-container hours-tens">
+                    <div class="card">
+                        <div class="top">
+                            <div class="digit">0</div>
+                        </div>
+                        <div class="bottom">
+                            <div class="digit">0</div>
+                        </div>
+                        <div class="flap">
+                            <div class="digit">0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="number-container hours-ones">
+                    <div class="card">
+                        <div class="top">
+                            <div class="digit">0</div>
+                        </div>
+                        <div class="bottom">
+                            <div class="digit">0</div>
+                        </div>
+                        <div class="flap">
+                            <div class="digit">0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="separator">:</div>
+                <div class="number-container minutes-tens">
+                    <div class="card">
+                        <div class="top">
+                            <div class="digit">0</div>
+                        </div>
+                        <div class="bottom">
+                            <div class="digit">0</div>
+                        </div>
+                        <div class="flap">
+                            <div class="digit">0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="number-container minutes-ones">
+                    <div class="card">
+                        <div class="top">
+                            <div class="digit">0</div>
+                        </div>
+                        <div class="bottom">
+                            <div class="digit">0</div>
+                        </div>
+                        <div class="flap">
+                            <div class="digit">0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="separator seconds-separator">:</div>
+                <div class="number-container seconds-tens">
+                    <div class="card">
+                        <div class="top">
+                            <div class="digit">0</div>
+                        </div>
+                        <div class="bottom">
+                            <div class="digit">0</div>
+                        </div>
+                        <div class="flap">
+                            <div class="digit">0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="number-container seconds-ones">
+                    <div class="card">
+                        <div class="top">
+                            <div class="digit">0</div>
+                        </div>
+                        <div class="bottom">
+                            <div class="digit">0</div>
+                        </div>
+                        <div class="flap">
+                            <div class="digit">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="date">2024年1月1日 星期一</div>
+        </div>
+        
+        <!-- 设置面板 -->
+        <div id="bellSettingsPanel" class="settings-panel">
+            <div class="settings-title">整点报时设置</div>
+            <div class="settings-content">
+                <div class="bell-option">
+                    <label>
+                        <input type="checkbox" id="multiBellCheckbox"> 根据小时数敲钟
+                    </label>
+                    <button id="testBellButton" class="test-bell-btn">试听音效</button>
+                </div>
+                <div class="hours-selection">
+                    <div class="hours-title">选择报时的小时：</div>
+                    <div class="hours-checkboxes" id="hoursCheckboxes">
+                        <!-- JavaScript 将在这里动态生成小时选择器 -->
+                    </div>
+                    <div class="preset-buttons">
+                        <button id="selectAllHours">全选</button>
+                        <button id="selectBusinessHours">选中工作时段</button>
+                        <button id="selectNone">清除</button>
+                    </div>
+                </div>
+                <!-- 音量设置说明 -->
+                <div class="settings-section">
+                    <div class="settings-info volume-note">
+                        <small><i class="volume-icon">🔊</i> 非工作时段（21:00-次日7:00）报时音量为工作时段的70%</small>
+                    </div>
+                </div>
+                <div class="settings-buttons">
+                    <button id="saveBellSettings">保存</button>
+                    <button id="cancelBellSettings">取消</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="zoomOutBtn">-</button>
+            <button id="toggleSecondsBtn">隐藏秒</button>
+            <button id="toggleBellBtn">整点报时</button>
+            <button id="zoomInBtn">+</button>
+        </div>
+    </div>
+    <script src="./assets/js/script.js"></script>
+</body>
+</html> 

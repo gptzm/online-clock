@@ -1,0 +1,1296 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+body {
+    background-color: #000;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: Helvetica, Tahoma, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", STXihei, "Microsoft YaHei", SimHei, "WenQuanYi Micro Hei";
+    font-weight: bold;
+    overflow: hidden;
+    transition: background-color 0.5s ease;
+}
+
+/* 白色主题样式 */
+body.light-theme {
+    background-color: #fff;
+}
+
+.light-theme .date {
+    color: #000;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.light-theme .separator {
+    color: #333;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.theme-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 70px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    padding: 0;
+    font-size: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    opacity: 0.5;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+}
+
+.theme-toggle-btn:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.2);
+    -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+    transform: scale(1.05);
+}
+
+/* 为不支持emoji的设备提供文本回退 */
+.theme-toggle-btn:before {
+    content: "主题";
+    font-size: 12px;
+}
+
+/* 支持emoji的设备隐藏文本 */
+@supports (content: "🌓") {
+    .theme-toggle-btn:before {
+        content: "";
+    }
+}
+
+.light-theme .theme-toggle-btn,
+.light-theme .fullscreen-btn,
+.light-theme .controls button {
+    color: #333;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .theme-toggle-btn:hover,
+.light-theme .fullscreen-btn:hover,
+.light-theme .controls button:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.light-theme .controls button.active {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.clock-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    display: -webkit-flex;
+    display: flex;
+    z-index: 1000;
+}
+
+/* 为 controls 中的按钮添加 margin */
+.controls button {
+    margin-right: 10px; /* 添加右侧间距 */
+}
+.controls button:last-child {
+    margin-right: 0; /* 最后一个按钮不需要右侧间距 */
+}
+
+.time-section {
+    display: -webkit-inline-flex;
+    display: inline-flex;
+    -webkit-align-items: center;
+    align-items: center;
+    white-space: nowrap;
+}
+
+/* 为 time-section 中的元素添加间距 */
+.number-container, .separator {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.settings-content {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.settings-content > * {
+    margin-bottom: 15px;
+}
+.settings-content > *:last-child {
+    margin-bottom: 0;
+}
+
+.hours-selection {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.hours-selection > * {
+    margin-bottom: 10px;
+}
+.hours-selection > *:last-child {
+    margin-bottom: 0;
+}
+
+.hours-checkboxes {
+    display: flex;
+    display: -webkit-flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    margin: 12px 0;
+    max-height: none;
+    overflow: hidden;
+    width: 100%;
+}
+
+.hours-row {
+    display: flex;
+    display: -webkit-flex;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    width: 100%;
+    margin-bottom: 6px;
+}
+
+.hour-item {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 12px;
+    color: #ccc;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+    -webkit-user-select: none;
+    user-select: none;
+    margin: 0 2px;
+}
+
+.hour-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.hour-item.selected {
+    background: rgba(30, 144, 255, 0.6);
+    color: white;
+}
+
+/* 为旧设备提供回退布局 */
+@supports not (display: flex) {
+    .hours-checkboxes {
+        display: block;
+        overflow: hidden;
+    }
+    
+    .hours-row {
+        display: block;
+        margin-bottom: 6px;
+        overflow: hidden;
+    }
+    
+    .hour-item {
+        float: left;
+        margin: 0 1%;
+        width: 6.5%;
+    }
+}
+
+/* 移动设备适配 */
+@media (max-width: 768px) {
+    .hour-item {
+        width: 22px;
+        height: 26px;
+        line-height: 26px;
+        font-size: 11px;
+        margin: 0 1px;
+    }
+}
+
+/* 清理废弃的.hour-checkbox样式 */
+.hour-checkbox {
+    display: none;
+}
+
+.bell-option label {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.bell-option label > *:not(:last-child) {
+    margin-right: 10px;
+}
+
+/* 为不支持flex的设备提供回退布局 */
+@supports not (display: flex) {
+    .bell-option label {
+        display: inline-block;
+    }
+    
+    .bell-option input[type="checkbox"] {
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+    
+    .hour-checkbox {
+        display: inline-block;
+        width: 100%;
+        min-height: 32px;
+        line-height: 32px;
+        vertical-align: middle;
+    }
+    .hour-checkbox input[type="checkbox"] {
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+    .hour-checkbox label, .hour-checkbox span, .hour-checkbox input[type="checkbox"] {
+        vertical-align: middle;
+    }
+}
+
+/* 这部分已经在上面定义过，这里删除重复定义 */
+
+.hour-checkbox input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.preset-buttons, .settings-buttons {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+.preset-buttons button, .settings-buttons button {
+    margin-right: 10px;
+}
+.preset-buttons button:last-child, .settings-buttons button:last-child {
+    margin-right: 0;
+}
+.controls button, .fullscreen-btn, .settings-buttons button, .preset-buttons button {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0.5;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    padding: 8px 12px;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+
+.controls button:hover, .fullscreen-btn:hover, .settings-buttons button:hover, .preset-buttons button:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.2);
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+}
+
+.controls button.active {
+    background: rgba(255, 255, 255, 0.3);
+    opacity: 1;
+}
+
+.fullscreen-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    padding: 0;
+    font-size: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    opacity: 0.5;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    display: block;
+}
+
+/* 为不支持emoji的设备提供文本回退 - 已在JS中处理 */
+/* Commenting out the rule around line 388 that sets display: flex */
+/*
+.fullscreen-btn {
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+*/
+
+/* 设置面板样式 */
+.settings-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 16px;
+    padding: 20px;
+    color: #fff;
+    width: 400px;
+    max-width: 95%;
+    max-height: 85vh;
+    overflow-y: auto;
+    z-index: 2000;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    display: none;
+    -webkit-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    -moz-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    -ms-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 浅色主题设置面板样式 */
+.light-theme .settings-panel {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.light-theme .settings-title {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .hours-title {
+    color: #333;
+}
+
+.light-theme .hour-checkbox label {
+    color: #333;
+}
+
+.light-theme .hour-checkbox input[type="checkbox"] {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.light-theme .hour-checkbox input[type="checkbox"]:checked {
+    background: rgba(0, 120, 210, 0.8);
+}
+
+.light-theme .preset-buttons button,
+.light-theme .settings-buttons button {
+    background: rgba(0, 0, 0, 0.15);
+    color: #222;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    font-weight: 500;
+}
+
+.light-theme .preset-buttons button:hover,
+.light-theme .settings-buttons button:hover {
+    background: rgba(0, 0, 0, 0.25);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.light-theme #saveBellSettings {
+    background: rgba(0, 120, 210, 0.8);
+    color: #fff;
+    border: 1px solid rgba(0, 100, 190, 0.8);
+    box-shadow: 0 1px 3px rgba(0, 100, 200, 0.3);
+    font-weight: 500;
+}
+
+.light-theme #saveBellSettings:hover {
+    background: rgba(0, 120, 210, 0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 100, 200, 0.4);
+}
+
+.light-theme #cancelBellSettings {
+    background: rgba(210, 60, 60, 0.8);
+    color: #fff;
+    border: 1px solid rgba(190, 50, 50, 0.8);
+    box-shadow: 0 1px 3px rgba(200, 50, 50, 0.3);
+    font-weight: 500;
+}
+
+.light-theme #cancelBellSettings:hover {
+    background: rgba(210, 60, 60, 0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(200, 50, 50, 0.4);
+}
+
+.light-theme .test-bell-btn {
+    background: rgba(0, 120, 210, 0.8);
+    color: #fff;
+    border: 1px solid rgba(0, 100, 190, 0.8);
+    box-shadow: 0 1px 3px rgba(0, 100, 200, 0.3);
+    font-weight: 500;
+}
+
+.light-theme .test-bell-btn:hover {
+    background: rgba(0, 120, 210, 0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 100, 200, 0.4);
+}
+
+.light-theme .settings-buttons {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.settings-title {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 10px;
+}
+
+.settings-content {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.bell-option {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+.bell-option label {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.light-theme .bell-option label {
+    color: #333;
+}
+
+.bell-option input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    margin-right: 8px;
+}
+
+.bell-option input[type="checkbox"]:checked {
+    background: rgba(0, 150, 255, 0.8);
+}
+
+.bell-option input[type="checkbox"]:checked:after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    top: 1px;
+    left: 5px;
+    transform: rotate(45deg);
+}
+
+.light-theme .bell-option input[type="checkbox"] {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.light-theme .bell-option input[type="checkbox"]:checked {
+    background: rgba(0, 120, 210, 0.8);
+}
+
+.test-bell-btn {
+    background: rgba(0, 150, 255, 0.5);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.test-bell-btn:hover {
+    background: rgba(0, 150, 255, 0.8);
+    transform: scale(1.05);
+}
+
+.hours-title {
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+/* 为不支持grid的旧设备提供回退布局 */
+@supports not (display: grid) {
+    .hours-checkboxes {
+        display: block;
+        overflow-y: auto;
+        max-height: 180px;
+        padding: 0 5px;
+    }
+    
+    .hour-checkbox {
+        float: left;
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        padding: 2px;
+        margin: 0;
+        min-height: 24px;
+        line-height: 24px;
+    }
+}
+
+/* 确保小时选择框在旧设备上正确显示 */
+.hour-checkbox {
+    min-height: 32px;
+    padding: 4px 8px;
+    margin: 0;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.hour-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.hour-checkbox input[type="checkbox"]:checked {
+    background: rgba(0, 150, 255, 0.8);
+}
+
+.hour-checkbox input[type="checkbox"]:checked:after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    top: 1px;
+    left: 5px;
+    transform: rotate(45deg);
+}
+
+.preset-buttons, .settings-buttons {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+.preset-buttons button {
+    flex: 1;
+    font-size: 14px;
+    padding: 6px 8px;
+}
+
+.settings-buttons {
+    margin-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 12px;
+}
+
+.settings-buttons button {
+    flex: 1;
+}
+
+#saveBellSettings {
+    background: rgba(0, 150, 255, 0.5);
+    opacity: 0.9;
+}
+
+#saveBellSettings:hover {
+    background: rgba(0, 150, 255, 0.8);
+}
+
+#cancelBellSettings {
+    background: rgba(150, 50, 50, 0.5);
+    opacity: 0.9;
+}
+
+#cancelBellSettings:hover {
+    background: rgba(150, 50, 50, 0.8);
+}
+
+.clock {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-transition: -webkit-transform 0.3s ease;
+    transition: transform 0.3s ease;
+    font-family: Helvetica, Tahoma, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", STXihei, "Microsoft YaHei", SimHei, "WenQuanYi Micro Hei";
+    font-weight: bold;
+    position: relative; /* 添加相对定位 */
+    cursor: grab; /* 显示抓取指针 */
+}
+
+.clock.dragging {
+    cursor: grabbing; /* 拖动时显示抓取指针 */
+    transition: none; /* 拖动时禁用过渡效果 */
+}
+
+/* 添加表示可拖动的提示元素 */
+.drag-handle {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.clock:hover .drag-handle {
+    opacity: 0.5;
+}
+
+.light-theme .drag-handle {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.time-section {
+    display: -webkit-inline-flex;
+    display: inline-flex;
+    -webkit-align-items: center;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.time-section.hide-seconds .seconds-separator,
+.time-section.hide-seconds .seconds-tens,
+.time-section.hide-seconds .seconds-ones {
+    display: none;
+}
+
+.number-container {
+    position: relative;
+    width: 110px;
+    height: 150px;
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
+}
+
+.card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.top, .bottom, .flap {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    overflow: hidden;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    align-items: center;
+    background: #333;
+    border-radius: 8px;
+}
+
+.digit {
+    font-size: 120px;
+    color: #fff;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
+    line-height: 150px;
+}
+
+.top {
+    background: -webkit-linear-gradient(top, #686868 0%, #4a4a4a 100%);
+    background: linear-gradient(180deg, #686868 0%, #4a4a4a 100%);
+    border-radius: 8px 8px 0 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.7);
+}
+
+.top .digit {
+    -webkit-transform: translateY(25%);
+    transform: translateY(25%);
+}
+
+.bottom {
+    bottom: 0;
+    background: -webkit-linear-gradient(top, #333 0%, #252525 100%);
+    background: linear-gradient(180deg, #333 0%, #252525 100%);
+    border-radius: 0 0 8px 8px;
+    border-top: 1px solid rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: inset 0 -3px 6px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.4);
+    box-shadow: inset 0 -3px 6px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.bottom .digit {
+    -webkit-transform: translateY(-25%);
+    transform: translateY(-25%);
+}
+
+.flap {
+    top: 0;
+    z-index: 2;
+    background: -webkit-linear-gradient(top, #686868 0%, #4a4a4a 100%);
+    background: linear-gradient(180deg, #686868 0%, #4a4a4a 100%);
+    border-radius: 8px 8px 0 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.7);
+    -webkit-transform-origin: bottom;
+    transform-origin: bottom;
+}
+
+.flap .digit {
+    -webkit-transform: translateY(25%);
+    transform: translateY(25%);
+}
+
+.flap.flipping {
+    -webkit-animation: flip 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+    animation: flip 1s cubic-bezier(0.4, 0.0, 0.2, 1);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+@-webkit-keyframes flip {
+    0% {
+        -webkit-transform: rotateX(0);
+        transform: rotateX(0);
+    }
+    100% {
+        -webkit-transform: rotateX(-180deg);
+        transform: rotateX(-180deg);
+    }
+}
+
+@keyframes flip {
+    0% {
+        -webkit-transform: rotateX(0);
+        transform: rotateX(0);
+    }
+    100% {
+        -webkit-transform: rotateX(-180deg);
+        transform: rotateX(-180deg);
+    }
+}
+
+.separator {
+    font-size: 80px;
+    color: #fff;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    user-select: none;
+    -webkit-user-select: none;
+    opacity: 0.7;
+    margin: 0 5px;
+}
+
+.date {
+    text-align: center;
+    color: #fff;
+    font-size: 30px;
+    margin-top: 25px;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    opacity: 0.8;
+}
+
+/* 针对老版本Safari的兼容性修复 */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .flap {
+        -webkit-animation-fill-mode: forwards;
+        animation-fill-mode: forwards;
+    }
+    
+    .top, .bottom {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+    
+    /* 旧版Safari的设置面板修复 */
+    .settings-panel {
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    
+    /* 旧版Safari的弹性盒修复 */
+    .settings-content,
+    .hours-selection,
+    .bell-option,
+    .preset-buttons,
+    .settings-buttons {
+        display: block;
+    }
+    
+    /* 确保小时选择框在旧设备上正确显示 */
+    .hours-checkboxes {
+        max-height: 180px;
+        overflow-y: auto;
+    }
+    
+    .hour-checkbox {
+        display: inline-block;
+        min-height: 24px;
+        line-height: 24px;
+        margin: 0 0 3px 0;
+        vertical-align: middle;
+    }
+    
+    .hour-checkbox input[type="checkbox"] {
+        vertical-align: middle;
+        margin-right: 3px;
+    }
+    
+    /* 在支持弹性盒的设备上恢复 */
+    @supports (display: flex) {
+        .settings-content,
+        .hours-selection,
+        .bell-option {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+        }
+        
+        .preset-buttons,
+        .settings-buttons {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-justify-content: space-between;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .number-container {
+        width: 90px;
+        height: 120px;
+    }
+    
+    .digit {
+        font-size: 65px;
+        line-height: 120px;
+    }
+    
+    .separator {
+        font-size: 65px;
+    }
+    
+    .date {
+        font-size: 16px;
+    }
+    
+    .controls button {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+    
+    .hours-checkboxes {
+        -ms-grid-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3px;
+        max-height: 150px;
+    }
+    
+    .hour-checkbox {
+        margin: 0 1px 2px 1px;
+        min-height: 22px;
+        line-height: 22px;
+    }
+    
+    /* 为移动设备上不支持grid的浏览器提供回退 */
+    @supports not (display: grid) {
+        .hours-checkboxes {
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .hour-checkbox {
+            width: 33.33%;
+            float: left;
+            padding: 1px;
+            margin: 0;
+            min-height: 22px;
+            line-height: 22px;
+        }
+    }
+    
+    .settings-panel {
+        max-width: 95%;
+        padding: 12px;
+        min-width: 250px;
+        max-height: 75vh;
+    }
+    
+    .settings-content > * {
+        margin-bottom: 8px;
+    }
+    
+    .hours-selection > * {
+        margin-bottom: 6px;
+    }
+    
+    .settings-title {
+        font-size: 18px;
+        padding-bottom: 8px;
+        margin-bottom: 10px;
+    }
+    
+    .preset-buttons button, 
+    .settings-buttons button {
+        padding: 6px 8px;
+        font-size: 14px;
+    }
+    
+    .bell-option {
+        -webkit-flex-direction: column;
+        -moz-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-align-items: flex-start;
+        -moz-align-items: flex-start;
+        -ms-flex-align: start;
+        align-items: flex-start;
+    }
+    
+    .bell-option label {
+        margin-bottom: 5px;
+    }
+    
+    /* 小屏幕设备上的按钮优化 */
+    .theme-toggle-btn, .fullscreen-btn {
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        font-size: 18px;
+    }
+    
+    .theme-toggle-btn:before, .fullscreen-btn:before {
+        font-size: 10px;
+    }
+}
+
+/* Fullscreen mode hiding with opacity and pointer-events */
+.fullscreen-mode .controls {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.fullscreen-mode .theme-toggle-btn {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* Remove visibility rules */
+.fullscreen-mode .fullscreen-btn {
+    /* No change needed here, it should remain visible */
+    opacity: 0.5; /* Or keep existing opacity */
+}
+
+.fullscreen-mode .date {
+    /* No change needed */
+    margin-bottom: 20px;
+}
+
+/* 亮色主题样式 */
+.light-theme .hour-item {
+    background: rgba(0, 0, 0, 0.15);
+    color: #222;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.light-theme .hour-item:hover {
+    background: rgba(0, 0, 0, 0.25);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .hour-item.selected {
+    background: rgba(30, 144, 255, 0.9);
+    color: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* 调整原有样式 */
+.time-section, .date {
+    position: relative;
+    transition: transform 0.2s ease;
+    transform-origin: center center;
+}
+
+.fullscreen-mode .resize-handle {
+    display: none;
+}
+
+/* 调整大小把手样式 */
+.resize-handle {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.15);
+    cursor: ew-resize;
+    z-index: 10;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.resize-handle:hover,
+.resizing-date .date-resize-handle {
+    background-color: rgba(30, 144, 255, 0.4);
+    opacity: 0.7 !important;
+}
+
+.clock:hover .resize-handle {
+    opacity: 0.4;
+}
+
+/* 触摸设备上总是显示把手，但全屏模式下除外 */
+@media (hover: none), (hover: on-demand) {
+    .resize-handle {
+        opacity: 0.5;
+        width: 20px;
+        height: 20px;
+    }
+    
+    .resize-handle::before {
+        font-size: 14px;
+    }
+    
+    .fullscreen-mode .resize-handle {
+        display: none !important;
+        opacity: 0 !important;
+    }
+}
+
+/* 确保全屏模式下不显示任何交互元素 */
+.fullscreen-mode .resize-handle,
+.fullscreen-mode .drag-handle {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* 全屏模式下禁用所有交互效果 */
+.fullscreen-mode .clock {
+    cursor: default !important;
+}
+
+/* 全屏模式下不显示重置动画 */
+.fullscreen-mode .reset-feedback {
+    animation: none !important;
+}
+
+.date-resize-handle {
+    right: -20px;
+    top: 50%;
+}
+
+/* 更兼容的箭头指示器 */
+.resize-handle::before {
+    content: "\2194"; /* 水平双向箭头 Unicode */
+    color: white;
+    font-size: 12px;
+    line-height: 1;
+    font-weight: normal;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+}
+
+/* 专门针对Edge浏览器的样式 */
+@supports (-ms-ime-align: auto) {
+    .resize-handle {
+        display: block;
+        text-align: center;
+        line-height: 16px;
+    }
+    .resize-handle::before {
+        display: inline-block;
+    }
+    .clock:hover .resize-handle {
+        opacity: 0.5;
+    }
+}
+
+/* 重置时的视觉反馈 */
+@keyframes reset-flash {
+    0% { box-shadow: 0 0 0 0 rgba(30, 144, 255, 0); }
+    50% { box-shadow: 0 0 30px 5px rgba(30, 144, 255, 0.5); }
+    100% { box-shadow: 0 0 0 0 rgba(30, 144, 255, 0); }
+}
+
+.reset-feedback {
+    animation: reset-flash 0.3s ease-out;
+}
+
+body.fullscreen-mode {
+    overflow: hidden !important; /* 强制禁止滚动 */
+}
+
+/* 音量提示样式 */
+.volume-note {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+.volume-note small {
+    font-size: 12px;
+}
+
+.volume-icon {
+    font-size: 11px;
+    margin-right: 4px;
+    opacity: 0.8;
+}
