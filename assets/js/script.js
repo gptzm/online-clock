@@ -791,6 +791,7 @@
                 // 进入全屏
                 var docElm = document.documentElement;
                 if (docElm.requestFullscreen) {
+                    console.log('docElm.requestFullscreen()');
                     docElm.requestFullscreen();
                 } else if (docElm.msRequestFullscreen) {
                     docElm.msRequestFullscreen();
@@ -798,10 +799,8 @@
                     docElm.mozRequestFullScreen();
                 } else if (docElm.webkitRequestFullscreen) {
                     docElm.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-                } else {
-                    // 浏览器不支持全屏API，使用自定义全屏
-                    toggleCustomFullscreen();
                 }
+                toggleCustomFullscreen();
             } else {
                 // 退出全屏
                 try {
@@ -813,15 +812,14 @@
                         document.mozCancelFullScreen();
                     } else if (document.webkitExitFullscreen) {
                         document.webkitExitFullscreen();
-                    } else {
-                        // 回退到自定义全屏退出
-                        exitCustomFullscreen();
                     }
+                    exitCustomFullscreen();
                 } catch (err) {
                     logDebug('退出全屏出错: ' + err.message);
                     // 强制退出自定义全屏
                     exitCustomFullscreen();
                 }
+                isCustomFullscreen = false;
             }
         } catch(e) {
             logDebug('切换全屏出错: ' + e.message);
