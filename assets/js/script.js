@@ -52,8 +52,9 @@
             for (var i = 0; i < 12; i++) {
                 var sound = new Audio('./assets/audio/bell.mp3');
                 sound.preload = 'auto';
-                // 对于iOS设备，增加音量并设置playsinline属性
-                sound.volume = 1.0;
+                // 设置初始音量为0.01以实现静音
+                sound.volume = 0.01;
+                // 对于iOS设备，设置playsinline属性以允许自动播放
                 sound.setAttribute('playsinline', '');
                 sound.setAttribute('webkit-playsinline', '');
                 bellSounds.push(sound);
@@ -589,36 +590,15 @@
                 // 检测Safari或iOS设备
                 var multiBellCheckbox = document.getElementById('multiBellCheckbox');
                 if (multiBellCheckbox) {
-                    if (isSafariOrIOS()) {
-                        // 在Safari或iOS上禁用多次敲钟选项
-                        multiBellCheckbox.disabled = true;
-                        multiBellCheckbox.checked = false;
-                        multiBellCheckbox.parentNode.style.opacity = "0.5";
-                        multiBellCheckbox.parentNode.title = "Safari和iOS设备不支持多次敲钟";
-                        
-                        // 在checkbox旁显示提示文字
-                        var warningSpan = document.createElement('span');
-                        warningSpan.className = 'safari-warning';
-                        warningSpan.textContent = '(Safari不支持)';
-                        warningSpan.style.color = '#ff6b6b';
-                        warningSpan.style.fontSize = '12px';
-                        warningSpan.style.marginLeft = '5px';
-                        
-                        // 如果警告文字不存在才添加
-                        if (!multiBellCheckbox.parentNode.querySelector('.safari-warning')) {
-                            multiBellCheckbox.parentNode.appendChild(warningSpan);
-                        }
-                    } else {
-                        // 重置为正常状态
-                        multiBellCheckbox.disabled = false;
-                        multiBellCheckbox.parentNode.style.opacity = "1";
-                        multiBellCheckbox.parentNode.title = "";
-                        
-                        // 移除警告文字（如果存在）
-                        var warningSpan = multiBellCheckbox.parentNode.querySelector('.safari-warning');
-                        if (warningSpan) {
-                            multiBellCheckbox.parentNode.removeChild(warningSpan);
-                        }
+                    // 重置为正常状态
+                    multiBellCheckbox.disabled = false;
+                    multiBellCheckbox.parentNode.style.opacity = "1";
+                    multiBellCheckbox.parentNode.title = "";
+                    
+                    // 移除警告文字（如果存在）
+                    var warningSpan = multiBellCheckbox.parentNode.querySelector('.safari-warning');
+                    if (warningSpan) {
+                        multiBellCheckbox.parentNode.removeChild(warningSpan);
                     }
                 }
                 
