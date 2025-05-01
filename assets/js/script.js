@@ -1582,17 +1582,40 @@
                     initBellSounds();
                 }
                 // 在用户第一次触摸屏幕时加载一次音频（静音播放）
-                var silentSound = bellSounds[0];
-                if (silentSound) {
-                    silentSound.volume = 0.01;
-                    silentSound.play().then(function() {
-                        silentSound.pause();
-                        silentSound.currentTime = 0;
-                        silentSound.volume = 1.0;
-                        logDebug('iOS音频解锁成功');
-                    }).catch(function(e) {
-                        logDebug('iOS音频解锁失败: ' + e);
-                    });
+                for (var i = 0; i < bellSounds.length; i++) {
+                    var silentSound = bellSounds[i];
+                    if (silentSound) {
+                        silentSound.volume = 0.01;
+                        silentSound.play().then(function() {
+                            silentSound.pause();
+                            silentSound.currentTime = 0;
+                            silentSound.volume = 1.0;
+                            logDebug('iOS音频解锁成功');
+                        }).catch(function(e) {
+                            logDebug('iOS音频解锁失败: ' + e);
+                        });
+                    }
+                }
+            }, {once: true});
+
+            document.addEventListener('click', function() {
+                if (!bellSoundsLoaded) {
+                    initBellSounds();
+                }
+                // 在用户第一次触摸屏幕时加载一次音频（静音播放）
+                for (var i = 0; i < bellSounds.length; i++) {
+                    var silentSound = bellSounds[i];
+                    if (silentSound) {
+                        silentSound.volume = 0.01;
+                        silentSound.play().then(function() {
+                            silentSound.pause();
+                            silentSound.currentTime = 0;
+                            silentSound.volume = 1.0;
+                            logDebug('iOS音频解锁成功');
+                        }).catch(function(e) {
+                            logDebug('iOS音频解锁失败: ' + e);
+                        });
+                    }
                 }
             }, {once: true});
             
